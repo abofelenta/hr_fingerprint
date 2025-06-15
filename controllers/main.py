@@ -176,7 +176,6 @@ class FingerprintsController(http.Controller):
         
         try:
             if action == 'save_fingerprint_device_info':
-                print("save_fingerprint_device_info")
 
                 fingerprint_device = self._get_fingerprint_device(iot_device.id)
                 
@@ -195,7 +194,6 @@ class FingerprintsController(http.Controller):
                 })
             
             elif action == 'fetch_user':
-                print("fetch_user")
                 fingerprint_device = self._get_fingerprint_device(iot_device.id)
                 if fingerprint_device:
                     self._process_users_bulk(fingerprint_device.id, data)
@@ -205,7 +203,6 @@ class FingerprintsController(http.Controller):
                     })
             
             elif action == 'download_attendance':
-                print("download_attendance")
                 fingerprint_device = self._get_fingerprint_device(iot_device.id)
                 if fingerprint_device:
                     self._process_attendance_bulk(fingerprint_device.id, data)
@@ -215,7 +212,6 @@ class FingerprintsController(http.Controller):
                     })
             
             elif action == 'download_template':
-                print("download_template")
                 fingerprint_device = self._get_fingerprint_device(iot_device.id)
                 if fingerprint_device:
                     self._process_templates_bulk(fingerprint_device.id, data)
@@ -224,32 +220,27 @@ class FingerprintsController(http.Controller):
                         'device_identifier': device_identifier,
                     })
 
-            elif action == 'clear_data':
-                print("clear_data")  
-                request.env['bus.bus']._sendone(iot_channel, 'fingerprint_iot_devices', {
-                    'action_type': 'clear_data',
-                    'device_identifier': device_identifier,
-                })      
+            # elif action == 'clear_data':
+            #     request.env['bus.bus']._sendone(iot_channel, 'fingerprint_iot_devices', {
+            #         'action_type': 'clear_data',
+            #         'device_identifier': device_identifier,
+            #     })      
             elif action == 'shutdown_device':
-                print("shutdown_device")  
                 request.env['bus.bus']._sendone(iot_channel, 'fingerprint_iot_devices', {
                     'action_type': 'shutdown_device',
                     'device_identifier': device_identifier,
                 })      
             elif action == 'reboot_device':
-                print("reboot_device")  
                 request.env['bus.bus']._sendone(iot_channel, 'fingerprint_iot_devices', {
                     'action_type': 'reboot_device',
                     'device_identifier': device_identifier,
                 })
 
             elif action == 'live_capture':
-               
                 print("live_capture")  
                 fingerprint_device = self._get_fingerprint_device(iot_device.id)
-                if fingerprint_device:
+                if fingerprint_device and fingerprint_device.auto_sync_time:
                     self._process_attendance_bulk(fingerprint_device.id, data)
-                   
                     request.env['bus.bus']._sendone(iot_channel, 'fingerprint_iot_devices', {
                         'action_type': 'live_capture',
                         'device_identifier': device_identifier,

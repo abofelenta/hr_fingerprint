@@ -80,7 +80,9 @@ class ZKPushProtocolController(http.Controller):
         table = params.get('table')
         stamp = params.get('Stamp')
         data = request.httprequest.data.decode('utf-8')
-        print(f"Table: {table}, Stamp: {stamp}, Data: {data}")
+        _logger.info(f"AAAAAAAAAAAAAAAA: {data}")
+        
+        print(f"Table: {table}, Stamp: {stamp}")
         if table == 'ATTLOG':
             # attendance data processing
             device.process_attendance_data(data, stamp)
@@ -100,10 +102,35 @@ class ZKPushProtocolController(http.Controller):
         elif table == 'USERPIC':
             # user picture data processing
             device.user_pic_data(data)
+        elif table == 'BIOPHOTO' :
+            _logger.info(f"333333333333333333: {line}")
+            device.user_bio_photo_data(line)
         else:
             _logger.warning(f"Unknown table type: {table} for device {device.serial_number}")
         return Response(f"OK", content_type='text/plain')
     
+    @http.route('/iclock/cdata', type='http', auth='none', methods=['GET', 'POST'], csrf=False)
+    def handle_cdata(self, **kwargs):
+        """
+        Handle device communication data upload
+        :param kwargs: Dictionary containing parameters from the request
+        1. If GET request, initialize the device and return its configuration.
+        2. If POST request, process the data upload from the device.
+        """
+        try:
+            serial_number = kwargs.get('SN')
+            if not serial_number:
+                return Response("Serial number required", status=400)
+
+            device = self.update_or_get_device(serial_number , kwargs)
+            if not device:
+                return Response("Device not found", status=400)
+            
+            device.update_communication_time()
+            return self._handle_data_upload(device, kwargs)
+        except Exception as e:
+            _logger.error(f"Error in cdata: {str(e)}", exc_info=True)
+            return Response("ERROR", status=500)
 
     @http.route('/iclock/getrequest', type='http', auth='none', methods=['GET'], csrf=False)
     def handle_getrequest(self, **kwargs):
@@ -191,31 +218,6 @@ class ZKPushProtocolController(http.Controller):
         except Exception as e:
             print(f"Error in devicecmd: {str(e)}")
     
-    @http.route('/iclock/cdata', type='http', auth='none', methods=['POST'], csrf=False)
-    def handle_cdata(self, **kwargs):
-        """
-        Handle device communication data upload
-        :param kwargs: Dictionary containing parameters from the request
-        1. If GET request, initialize the device and return its configuration.
-        2. If POST request, process the data upload from the device.
-        """
-        # try:
-        serial_number = kwargs.get('SN')
-        print(f"Serial Number113: {serial_number} in cdata")
-        #     if not serial_number:
-        #         return Response("Serial number required", status=400)
-
-        #     device = self.update_or_get_device(serial_number , kwargs)
-        #     if not device:
-        #         return Response("Device not found", status=400)
-            
-        #     device.update_communication_time()
-        #     return self._handle_data_upload(device, kwargs)
-        # except Exception as e:
-        #     _logger.error(f"Error in cdata: {str(e)}", exc_info=True)
-        #     return Response("ERROR", status=500)
-        return "OK"
-
     @http.route('/iclock/edata', type='http', auth='none', methods=['POST'], csrf=False)
     def handle_edata(self, **kwargs):
         """ 

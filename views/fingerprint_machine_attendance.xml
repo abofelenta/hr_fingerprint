@@ -5,27 +5,76 @@
         <field name="name">fingerprint.attendance.tree</field>
         <field name="model">fingerprint.attendance</field>
         <field name="arch" type="xml">
-            <list create="false" >
+            <list create="false" delete="false" edit="false">
                 <field name="user_id"/>
                 <field name="device_id"/>
                 <field name="attendance_type"/>
                 <field name="punching_time"/>
                 <field name="punch_type"/>
+                <field name="is_used"/>
             </list>
         </field>
     </record>
+    <!-- Form View for Biometric Devices -->
+    <record id="view_fingerprint_machine_attendance_form" model="ir.ui.view">
+        <field name="name">Fingerprint Attendance Form</field>
+        <field name="model">fingerprint.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Fingerprint Attendance" create="false" delete="false" edit="false"> 
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="attendance_type"/>
+                            <field name="punch_type"/>
+                        </group>
+                        <group>
+                            <field name="device_id"/>
+                            <field name="punching_time"/>
+                            <field name="is_used"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Search View for Biometric Devices -->
+    <record id="view_fingerprint_attendance_search" model="ir.ui.view">
+        <field name="name">fingerprint.attendance.search</field>
+        <field name="model">fingerprint.attendance</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- بحث سريع (Name Search) -->
+                <field name="user_id" string="User"/>
 
+                <!-- فلترات مخصصة -->
+                <filter name="punch_type" string="Punch Type" domain="[]" context="{'group_by': 'punch_type'}"/>
+                <filter name="attendance_type" string="Attendance Type" domain="[]" context="{'group_by': 'attendance_type'}"/>
+                <filter name="device_id" string="Device" domain="[]" context="{'group_by': 'device_id'}"/>
+
+                <!-- فلتر حسب التاريخ -->
+                <filter name="today" string="Today" domain="[('punching_time', '>=', context_today().strftime('%Y-%m-%d 00:00:00'))]"/>
+
+                <!-- تجميع بيانات -->
+                <group expand="1" string="Group By">
+                    <filter name="group_by_user" string="User" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_by_date" string="Date" context="{'group_by': 'punching_time:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
     <!-- Action and Menu Configuration -->
     <record id="action_fingerprint_machine_attendance" model="ir.actions.act_window">
-        <field name="name">fingerprint.attendance.action</field>
+        <field name="name">Fingerprint Attendance</field>
         <field name="res_model">fingerprint.attendance</field>
-        <field name="view_mode">list</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                You can manage attendance data here.
+            </p>
+        </field>
     </record>
-
-    <menuitem id="menu_fingerprint_machine_attendance_main" 
-              name="Attendance" 
-              parent="menu_fingerprint_root"/>
-              
+             
     <menuitem id="menu_fingerprint_machine_attendance" 
               name="Attendance Data" 
               parent="menu_fingerprint_machine_attendance_main"

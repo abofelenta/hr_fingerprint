@@ -36,11 +36,8 @@ export class FingerprintButtonAction extends Component {
         if (this.connection_mode == 'iot') {
             await this.handleIoTMode();
         }
-        else if (this.connection_mode == 'push') {
-            await this.handlePushMode();
-        }
         else {
-            await this.handleDirectMode();
+            await this.handlePushOrDirectMode2();
         }
     }
 
@@ -53,27 +50,34 @@ export class FingerprintButtonAction extends Component {
         await handleBiometricIoTConnectionFallbacks(this.env, this.orm, args);
     }
 
-    async handlePushMode() {
+    async handlePushOrDirectMode2() {
         if (this.props.action === 'save_fingerprint_device_info') {
-            const serialNumber = this.props.record.data.serial_number;
-            const deviceName = this.props.record.data.name || _t('Untitled Device');
-            const connectionMode = this.props.record.data.connection_mode;
-
-            if (!serialNumber) {
+            if (this.connection_mode == 'push' && !this.props.record.data.serial_number) {
                 this.notification.add(_t("Please set the serial number for the device."), {
                     type: "warning",
                 });
                 return;
             }
 
+            if (this.connection_mode == 'direct' && !this.props.record.data.ip_address) {
+                this.notification.add(_t("Please set the ip address for the device."), {
+                    type: "warning",
+                });
+                return;
+            }
+
             try {
-                const [deviceId] = await this.orm.create("hr.fingerprint.device", [{
-                    serial_number: serialNumber,
-                    name: deviceName,
-                    connection_mode: connectionMode,
-                    // active: false,
-                }]);
-                console.log("Created Device ID:", deviceId);
+                const deviceId = await this.orm.create("hr.fingerprint.device",
+                    [{
+                        name: this.props.record.data.name,
+                        connection_mode: this.connection_mode,
+                        ip_address: this.props.record.data.ip_address,
+                        connection_timeout: this.props.record.data.connection_timeout,
+                        port: this.props.record.data.port,
+                        protocol: this.props.record.data.protocol,
+                        serial_number: this.props.record.data.serial_number,
+                    }], { context: { action_type: this.props.action } }
+                );
 
                 if (!deviceId) {
                     this.notification.add(_t("Error when creating the device record."), {
@@ -89,15 +93,35 @@ export class FingerprintButtonAction extends Component {
                 await this.action.doAction({ type: 'ir.actions.act_window_close' });
                 // await this.action.doAction({ type: 'ir.actions.client', tag: 'reload' });
             } catch (error) {
-                console.error("Error creating device:", error);
                 this.notification.add(_t("An unexpected error occurred."), {
                     type: "danger",
                 });
             }
+        } else {
+            console.log(this.props.record.resId, "YYYYYYYYYYYYYYYYYYYYYYYY")
+            const result = await this.orm.call("hr.fingerprint.device", "action_type_processing", [this.props.record.resId], { context: { action_type: this.props.action } })
+            this.notification.add(result.message, {
+                type: result.status === "success" ? "success" : "danger",
+                title: result.status === "success" ? "نجاح" : "خطأ",
+            });
         }
-    }
 
-    async handleDirectMode() { }
+    }
+    async handleNotification() {
+        const actionMessages = {
+            save_fingerprint_device_info: 'A %s device has been saved successfully %s.',
+            fetch_user: 'Fetched users data successfully from %s device.',
+            download_attendance: 'Downloaded attendance data successfully from %s device.',
+            download_template: 'Downloaded template data successfully from %s device.',
+            clear_data: 'Cleared all data successfully from %s device.',
+            shutdown_device: 'The device %s has been successfully turned off.',
+            reboot_device: 'The device %s has been successfully reboot.',
+            live_capture: 'Fingerprint registered from %s device. [Type: %s, Punch: %s]',
+        };
+        this.notification.add(_t("User fetched successfully."), {
+            type: "success",
+        });
+    }
 
 }
 export const fingerprintButtonAction = {

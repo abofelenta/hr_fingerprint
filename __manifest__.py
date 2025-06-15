@@ -18,17 +18,19 @@
 
     'version': '0.1',
 
-    "data": [
-        "security/ir.model.access.csv",
-        "wizard/add_fingerprint_device_views.xml",
-        "views/hr_fingerprint_devices_view.xml",
+    'data': [
+        'wizard/add_fingerprint_device_views.xml',
+        'security/ir.model.access.csv',
+        'views/main_menu.xml',
+        'views/hr_fingerprint_devices_view.xml',
         "views/zk_devices_command_views.xml",
-        "views/fingerprint_machine_attendance.xml",
-        "views/hr_employee_views.xml",
-        "views/hr_fingerprint_templates_view.xml",
-        "views/hr_fingerprint_users_view.xml",
-        "views/hr_partner_view.xml",
-        "views/iot_devices_view.xml",
+        'views/hr_fingerprint_users_view.xml',
+        'views/hr_fingerprint_templates_view.xml',
+        'views/fingerprint_machine_attendance.xml',
+        'views/iot_devices_view.xml',
+        'views/hr_partner_view.xml',
+        'views/hr_employee_views.xml',
+        # 'data/cron_jobs.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
@@ -40,7 +42,7 @@
             'hr_fingerprints/static/src/js/iot_implement_action.js',
             'hr_fingerprints/static/src/js/fingerprint_button_action.js',
             'hr_fingerprints/static/src/xml/fingerprint_button_action.xml',
-            'hr_fingerprints/static/src/js/device_menu_actions.js',
+            # 'hr_fingerprints/static/src/js/device_menu_actions.js',
             # 'hr_fingerprints/static/src/js/active_device_widget.js',
             # 'hr_fingerprints/static/src/xml/active_device_widget.xml',
             # 'hr_fingerprints/static/src/js/fingerprint_iot_notification_service.js',

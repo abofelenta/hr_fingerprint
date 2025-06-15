@@ -7,18 +7,19 @@
         <field name="arch" type="xml">
             <list create="false">
                 <header>
-                    <button name="%(hr_fingerprints.add_fingerprint_device)d" type="action" string="New Device" class="btn-primary o_list_button_save" display="always"/>
+                    <button name="%(hr_fingerprints.add_fingerprint_device)d" type="action"
+                        string="New Device" class="btn-primary o_list_button_save" display="always" />
                 </header>
-                <field name="name"/>
-                <field name="connection_type"/>
-                <field name="platform"/>
-                <field name="firmware_version"/>
-                <field name="active"/>
+                <field name="name" />
+                <field name="connection_type" />
+                <field name="platform" />
+                <field name="firmware_version" />
+                <field name="active_device" />
             </list>
         </field>
     </record>
 
-    
+
     <!-- Form View for Biometric Devices -->
     <record id="view_hr_fingerprint_device_form" model="ir.ui.view">
         <field name="name">hr.fingerprint.device.form</field>
@@ -26,151 +27,191 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <widget name="fingerprint_button_action" action="fetch_user" icon="fa-user-circle" text="Fetch Users"/>
-                    <widget name="fingerprint_button_action" action="download_attendance" icon="fa-download" text="Download Attendance"/>
-                    <widget name="fingerprint_button_action" action="download_template" icon="fa-download" text="Download Template"/>
-                    <widget name="fingerprint_button_action" action="clear_data" icon="fa-trash" text="Clear Data"/>
-                    <widget name="fingerprint_button_action" action="reboot_device" icon="fa-power-off" text="Reboot Device"/>
-                    <widget name="fingerprint_button_action" action="shutdown_device" icon="fa-power-off" text="Shutdown Device"/>
+                    <widget name="fingerprint_button_action"
+                        action="fetch_user"
+                        icon="fa-user-circle" text="Fetch Users"
+                        invisible="not active_device"
+                        groups="base.group_system"
+                    />
+                    <widget name="fingerprint_button_action"
+                        action="download_attendance"
+                        icon="fa-download" text="Download Attendance"
+                        invisible="not active_device" groups="base.group_system"
+                    />
+                    <widget name="fingerprint_button_action"
+                        action="download_template"
+                        icon="fa-download" text="Download Template"
+                        invisible="not active_device" groups="base.group_system"
+                    />
+                    <!-- <widget name="fingerprint_button_action"
+                        action="clear_data" icon="fa-trash"
+                        text="Clear Data" invisible="not active_device"
+                        groups="base.group_system"
+                    /> -->
+                    <widget name="fingerprint_button_action"
+                        action="reboot_device"
+                        icon="fa-power-off" text="Reboot Device"
+                        invisible="not active_device"
+                        groups="base.group_system"
+                    />
+                    <widget name="fingerprint_button_action"
+                        action="shutdown_device"
+                        icon="fa-power-off" text="Shutdown Device"
+                        invisible="not active_device"
+                        groups="base.group_system"
+                    />
                 </header>
                 <sheet>
                     <div class="oe_title">
-                    <h1>
-                        <field name="name"/>
-                    </h1>
-                </div>
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
                     <group name="basic_info" string="Basic Information">
                         <group>
-                            <field name="serial_number"/>
-                            <field name="firmware_version"/>
-                            <field name="connection_status"/>
-                            
+                            <field name="device_name" />
+                            <field name="serial_number" />
+                            <field name="firmware_version" />
+
                         </group>
                         <group invisible="connection_mode != 'push'">
                             <field name="push_version" />
-                            <field name="reg_device_type"/>
+                            <field name="reg_device_type" />
                         </group>
                         <group>
-                            <field name="active"/>
-                            <!-- <field name="active" widget="active_device_widget"/> -->
-                            <field name="connection_type"/>
+                            <field name="active_device" groups="base.group_system" />
+                            <field name="connection_type" />
+                            <field name="connection_status" />
+
                         </group>
                     </group>
                     <notebook>
                         <page string="information">
                             <group string="Device">
                                 <group>
-                                    <field name="manufacturer"/>
-                                    <field name="platform"/>
+                                    <field name="manufacturer" />
+                                    <field name="platform" />
                                 </group>
                                 <group string="From IoT Box" invisible="connection_mode != 'iot'">
-                                    <field name="iot_device_id" options="{'no_create': True, 'no_open': True}" />
+                                    <field name="iot_device_id"
+                                        options="{'no_create': True, 'no_open': True}" />
                                 </group>
                             </group>
                             <group string="Statistics">
                                 <group>
-                                    <field name="user_usage"/>
-                                    <field name="fp_usage"/>
-                                    <field name="transaction_count"/>
-                                    <field name="att_log_count"/>
+                                    <field name="user_usage" />
+                                    <field name="fp_usage" />
+                                    <field name="transaction_count" />
+                                    <field name="att_log_count" />
                                 </group>
                                 <group invisible="connection_mode != 'push'">
                                     <group>
-                                        <field name="face_usage"/>
-                                        <field name="fv_usage"/>
-                                        <field name="pv_usage"/>
-                                        <field name="max_att_log_count"/>
-                                        <field name="max_user_photo_count"/>
+                                        <field name="face_usage" />
+                                        <field name="fv_usage" />
+                                        <field name="pv_usage" />
+                                        <field name="max_att_log_count" />
+                                        <field name="max_user_photo_count" />
                                     </group>
                                     <group>
-                                        <field name="oem_vendor"/>
-                                        <field name="fp_version"/>
-                                        <field name="face_version"/>
-                                        <field name="fv_version"/>
-                                        <field name="pv_version"/>
+                                        <field name="oem_vendor" />
+                                        <field name="fp_version" />
+                                        <field name="face_version" />
+                                        <field name="fv_version" />
+                                        <field name="pv_version" />
                                     </group>
-                                    
+
                                 </group>
                             </group>
                         </page>
                         <page string="Network" invisible="connection_type != 'network'">
                             <group>
-                                <group string="TCP/IP Setting" invisible="connection_type != 'network'">
-                                    <field name="ip_address"/>
-                                    <field name="port"/>
-                                    <field name="subnet_mask"/>
-                                    <field name="gateway"/>
+                                <group string="TCP/IP Setting"
+                                    invisible="connection_type != 'network'">
+                                    <field name="ip_address" />
+                                    <field name="port" />
+                                    <field name="subnet_mask" />
+                                    <field name="gateway" />
                                 </group>
-                                <group string="Communication">
-                                    <field name="auto_sync_time"/>
-                                    <field name="quick_connect"/>
+                                <group string="Communication" groups="base.group_system">
+                                    <field name="auto_sync_time" />
                                 </group>
-                                
+
                             </group>
                         </page>
                         <page name="device_users" string="Device Users">
                             <field name="user_ids" widget="one2many" readonly="1">
                                 <list>
-                                    <field name="partner_id"/>
-                                    <field name="user_id"/>
-                                    <field name="group_id"/>
-                                    <field name="active"/>
+                                    <field name="partner_id" />
+                                    <field name="user_id" />
+                                    <field name="group_id" />
+                                    <field name="active_user" />
                                 </list>
                             </field>
                         </page>
                         <page name="device_templates" string="Device Templates">
                             <field name="template_ids" widget="one2many" readonly="1">
                                 <list>
-                                    <field name="display_name"/>
-                                    <field name="device_id"/>
-                                    <field name="user_id"/>
-                                    <field name="valid"/>
-                                    <field name="fingerprint_id"/>
+                                    <field name="display_name" />
+                                    <field name="device_id" />
+                                    <field name="user_id" />
+                                    <field name="valid" />
+                                    <field name="fingerprint_id" />
                                 </list>
                             </field>
                         </page>
                         <page name="device_attendance" string="Device Attendance">
-                            <field name="attendance_ids" widget="one2many" readonly="1"  >
+                            <field name="attendance_ids" widget="one2many" readonly="1">
                                 <list limit="10">
-                                    <field name="user_id"/>
-                                    <field name="is_used"/>
-                                    <field name="punch_type"/>
-                                    <field name="attendance_type"/>
-                                    <field name="punching_time"/>
+                                    <field name="user_id" />
+                                    <field name="is_used" />
+                                    <field name="punch_type" />
+                                    <field name="attendance_type" />
+                                    <field name="punching_time" />
                                 </list>
                             </field>
                         </page>
-                        <page name="device_commands" string="Device Commands" invisible="connection_mode != 'push'">
-                            <field name="command_ids" widget="one2many" readonly="1"  >
+                        <page name="device_commands" string="Device Commands"
+                            invisible="connection_mode != 'push'">
+                            <field name="command_ids" widget="one2many" readonly="1">
                                 <list limit="10">
-                                    <field name="name"/>
-                <field name="cmd_id"/>
-                <field name="command_type"/>
-                <field name="user_id"/>
-                <field name="shell_cmd"/>
-                <field name="generated_command"/>
+                                    <field name="command_type"/>
+                                    <!-- <field name="command_data"/> -->
+                                    <!-- <field name="return_code"/> -->
+                                    <!-- <field name="create_date"/>
+                                    <field name="send_date"/>
+                                    <field name="execution_date"/>
+                                    <field name="response_data"/>
+                                    <field name="state" 
+                                        widget="badge" 
+                                        decoration-success="state == 'done'"
+                                        decoration-primary="state == 'sent'"
+                                        decoration-info="state == 'draft'" 
+                                        decoration-warning="state == 'pending'"
+                                        decoration-danger="state == 'failed'"
+                                    /> -->
                                 </list>
                             </field>
                         </page>
-                        <page name="device_settings" string="Device Settings" invisible="connection_mode != 'push'">
+                        <page name="device_settings" string="Device Settings"
+                            invisible="connection_mode != 'push'">
                             <group>
                                 <group>
-                                    <field name="error_delay"/>
-                                    <field name="delay"/>
-                                    <field name="trans_interval"/>
-                                    <field name="trans_times"/>
-                                    <field name="realtime"/>
+                                    <field name="error_delay" />
+                                    <field name="delay" />
+                                    <field name="trans_interval" />
+                                    <field name="trans_times" />
+                                    <field name="realtime" />
                                 </group>
                                 <group>
-                                    <field name="photo_fun_on"/>
-                                    <field name="finger_fun_on"/>
-                                    <field name="face_fun_on"/>
-                                    <field name="fv_fun_on"/>
-                                    <field name="pv_fun_on"/>
+                                    <field name="photo_fun_on" />
+                                    <field name="finger_fun_on" />
+                                    <field name="face_fun_on" />
+                                    <field name="fv_fun_on" />
+                                    <field name="pv_fun_on" />
                                 </group>
-                                    
+
                             </group>
-                            
+
                         </page>
                     </notebook>
                 </sheet>
@@ -180,29 +221,20 @@
 
     <!-- Action and Menu Configuration -->
     <record id="action_hr_fingerprint_device" model="ir.actions.act_window">
-        <field name="name">Hr fingerprint Device</field>
+        <field name="name">Hr Fingerprint Device</field>
         <field name="res_model">hr.fingerprint.device</field>
         <field name="view_mode">list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No Device found!
-            </p><p>
-                Click on the 
-                <a name="%(hr_fingerprints.add_fingerprint_device)d" type="action" tabindex="-1">New Device</a>
-                 to add a fingerprint device.
             </p>
+            <p> Click on the <a name="%(hr_fingerprints.add_fingerprint_device)d" type="action"
+                    tabindex="-1">New Device</a> to add a fingerprint device. </p>
         </field>
     </record>
-
-    <menuitem id="menu_fingerprint_root" name="Fingerprint" web_icon="hr_fingerprints,static/description/02.png"/>
-
-    <menuitem id="menu_hr_fingerprint_main" 
-              name="Device" 
-              sequence="10"
-              parent="menu_fingerprint_root"/>
-              
+             
     <menuitem id="menu_biometric_devices" 
-              name="Biometric Devices" 
+              name="Devices Fingerprint" 
               parent="menu_hr_fingerprint_main"
               action="action_hr_fingerprint_device"
               sequence="10"/>

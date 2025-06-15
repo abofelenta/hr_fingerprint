@@ -5,7 +5,9 @@ class FingerprintMachineAttendance(models.Model):
     """Model to hold data from the Fingerprint device"""
     _name = 'fingerprint.attendance'
     _description = 'Attendance'
-
+    _order = 'punching_time desc'
+    rec_name = 'user_id.name'
+    
     device_id = fields.Many2one(
         'hr.fingerprint.device', 
         string='Fingerprint Device',
@@ -55,6 +57,5 @@ class FingerprintMachineAttendance(models.Model):
                 user = self.env['hr.fingerprint.user'].browse(vals['user_id'])
                 vals['user_id'] = user.id if user.exists() else False
 
-        return super().create(vals_list)        
-    
-    
+        return super().create(vals_list)      
+  

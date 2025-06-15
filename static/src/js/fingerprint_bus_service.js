@@ -39,7 +39,7 @@ export const fingerprintIoTNotificationService = {
                 fetch_user: 'Fetched users data successfully from %s device.',
                 download_attendance: 'Downloaded attendance data successfully from %s device.',
                 download_template: 'Downloaded template data successfully from %s device.',
-                clear_data: 'Cleared all data successfully from %s device.',
+                // clear_data: 'Cleared all data successfully from %s device.',
                 shutdown_device: 'The device %s has been successfully turned off.',
                 reboot_device: 'The device %s has been successfully reboot.',
                 live_capture: 'Fingerprint registered from %s device. [Type: %s, Punch: %s]',

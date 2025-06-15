@@ -9,7 +9,7 @@ access_hr_fingerprint_template_manager,hr.fingerprint.template.manager,model_hr_
 access_hr_fingerprint_attendance_user,fingerprint.attendance.user,model_fingerprint_attendance,base.group_user,1,1,0,0
 access_hr_fingerprint_attendance_manager,fingerprint.attendance.manager,model_fingerprint_attendance,base.group_system,1,1,1,1
 access_add_fingerprint_device,access.add.fingerprint.device,model_add_fingerprint_device,base.group_system,1,1,1,0
-access_fingerprint_device_command_manager,zk.device.command.manager,model_zk_device_command,base.group_system,1,1,1,1
+access_fingerprint_device_command_manager,fingerprint.device.command.manager,model_fingerprint_device_command,base.group_system,1,1,1,1
 access_fingerprint_device_command_user,zk.device.command.user,model_zk_device_command,base.group_system,1,1,1,0
 access_hr_fingerprint_user_biometric,hr_fingerprint_user_biometric,model_hr_fingerprint_user_biometric,base.group_user,1,1,0,0
 access_hr_fingerprint_user_biometric_manager,hr_fingerprint_user_biometric.manager,model_hr_fingerprint_user_biometric,base.group_system,1,1,1,1

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <menuitem id="menu_fingerprint_root" name="Fingerprint" web_icon="hr_fingerprints,static/description/icon.png"/>
+    <menuitem id="menu_hr_fingerprint_main" name="Device" sequence="10" parent="menu_fingerprint_root"/>
+    <menuitem id="hr_fingerprint_user_menu" name="Users" sequence="20" parent="menu_fingerprint_root"/>
+    <menuitem id="menu_fingerprint_machine_attendance_main" sequence="30" name="Attendance" parent="menu_fingerprint_root"/>
+</odoo>

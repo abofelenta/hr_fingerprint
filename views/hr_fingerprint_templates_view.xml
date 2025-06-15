@@ -38,11 +38,18 @@
     </record>
     <!-- Action for Fingerprint Template -->
     <record id="action_hr_fingerprint_template" model="ir.actions.act_window">
-        <field name="name">Action Fingerprint Template</field>
+        <field name="name">Fingerprint Template</field>
         <field name="res_model">hr.fingerprint.template</field>
         <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                You can manage fingerprint templates here.
+            </p>
+            <p>
+                Use this section to manage fingerprint templates for users.
+            </p>
+        </field>
     </record>
     <!-- Menu Item for Fingerprint Template -->
-    <menuitem id="hr_fingerprint_template_menu" name="Fingerprint Template" parent="menu_fingerprint_root"/>
-    <menuitem id="hr_fingerprint_template_menu_action" name="Fingerprint Template" action="action_hr_fingerprint_template" parent="hr_fingerprint_template_menu"/>
+    <menuitem id="hr_fingerprint_template_menu_action" name="Fingerprint Template" sequence="21" action="action_hr_fingerprint_template" parent="hr_fingerprint_user_menu"/>
 </odoo>
